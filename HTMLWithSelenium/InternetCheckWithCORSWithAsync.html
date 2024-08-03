@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternetCheckWithCORSWithAsync - Network Check Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .status {
+            font-size: 24px;
+        }
+        .online {
+            color: green;
+        }
+        .offline {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">Checking connection...</div>
+
+    <script>
+            const checkOnlineStatus = async () => {
+            const statusElement = document.getElementById('status');
+            try {
+                const response = await fetch('https://httpbin.org/get', { method: 'GET', cache: 'no-cache' });
+                if (response.ok) {
+                    statusElement.textContent = 'You are online!';
+                    statusElement.className = 'status online';
+                } else {
+                    throw new Error('Network response was not ok.');
+                }
+            } catch (error) {
+                console.log('Fetch error:', error);
+                statusElement.textContent = 'You are offline!';
+                statusElement.className = 'status offline';
+            }
+        };
+
+        // Check the initial status
+        checkOnlineStatus();
+
+        // Poll every 5 seconds
+        setInterval(checkOnlineStatus, 5000);
+
+        // Add event listeners to update status when online or offline status changes
+        window.addEventListener('online', checkOnlineStatus);
+        window.addEventListener('offline', checkOnlineStatus);
+    </script>
+</body>
+</html>
+
+
